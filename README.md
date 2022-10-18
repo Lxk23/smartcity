@@ -16,3 +16,6 @@ https://user-images.githubusercontent.com/90737354/196352636-dd88a26c-f737-4d49-
 
 ### 视点漫游、随视点改变生成和销毁布告板
 https://user-images.githubusercontent.com/90737354/196363808-21d8e205-d20f-41e5-8780-2ef665acda1b.mp4
+
+### 线面绘制和销毁
+https://user-images.githubusercontent.com/90737354/196380876-c448b859-14a1-4a98-9b98-3e28bc2c5758.mp4
