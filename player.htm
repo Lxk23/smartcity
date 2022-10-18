@@ -1,0 +1,920 @@
+<!-- Copyright Epic Games, Inc. All Rights Reserved. -->
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="UTF-8" />
+  	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  	<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  	<title>地理信息系统</title>
+	<link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon">
+	<link rel="icon" type="image/png" sizes="96x96" href="/images/favicon-96x96.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+	<link type="text/css" rel="stylesheet" href="player.css">
+    <script type="text/javascript" src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+    <script type="text/javascript" src="scripts/webRtcPlayer.js"></script>
+    <script type="text/javascript" src="scripts/app.js"></script>
+
+</head>
+<style>
+	/* * {
+		box-sizing: border-box;
+	  } */
+  
+	/* body 样式 */
+	html,
+	body {
+	  width: 100%;
+	  height: 100%;
+	  margin: 0;
+	  padding: 0;
+	  display: flex;
+	  flex-direction: column;
+	  /* justify-content: space-between; */
+	  /* background-color: orangered; */
+	}
+  
+	/* 标题 */
+	.header {
+	  width: 100%;
+	  height: auto;
+	  background-color: #0890b9;
+	  /* padding: 20px 0px; */
+	  /* background: #0890b9; */
+	  color: white;
+	  display: flex;
+	  flex-direction: row;
+	  align-items: center;
+	  justify-content: space-between;
+	  flex-wrap: wrap;
+	}
+  
+	/* 标题字体加大 */
+	.header h1 {
+	  font-size: 22px;
+	  font-family: "微软雅黑";
+	  display: inline;
+	  padding-left: 20px;
+	}
+  
+	.header .home {
+	  padding-right: 25px;
+	}
+  
+	.header .sysmanager {
+	  padding-right: 20px;
+	}
+  
+	.header .position {
+	  padding: 0 10px;
+	}
+  
+	/* 列容器 */
+	.menu {
+	  margin: 0;
+	  padding: 0;
+	  display: -ms-flexbox;
+	  /* IE10 */
+	  display: flex;
+	  -ms-flex-wrap: wrap;
+	  /* IE10 */
+	  flex-wrap: wrap;
+	  /* height: 91.6vh; */
+	  flex-grow: 1;
+  
+	}
+  
+	/* 创建两个列 */
+	/* 边栏 */
+	.side {
+	  flex: 10%;
+	  margin: 0;
+	  padding: 0;
+	  background-color: #535250;
+	  padding-left: 10px;
+	  display: flex;
+	  flex-direction: column;
+	  align-items: left;
+	  justify-content: space-between;
+	  flex-wrap: wrap;
+	}
+  
+	.side h1 {
+	  font-size: 20px;
+	  font-family: "微软雅黑";
+	  color: aliceblue;
+	}
+  
+	.side h3 {
+	  font-size: 15px;
+	  font-family: "微软雅黑";
+	  color: deepskyblue;
+	  cursor: pointer;
+	}
+  
+	.side h3:hover {
+	  color: rgba(242, 245, 247, 0.89);
+	}
+  
+	/* 主要的内容区域 */
+	.main {
+    flex: 85%;
+    background-color: white;
+    padding: 0;
+    margin: 0;
+    width: 100vw;
+    height: 100%;
+    flex-grow: 1;
+    /* height:1000px; */
+  }
+  
+  .main .earth-box{
+    font-size: 0;
+  }
+	.button {
+	  border: none;
+	  width: 40px;
+	  height: 40px;
+	  font-family: "微软雅黑";
+	  color: rgb(246, 248, 247);
+	  text-align: center;
+	  text-decoration: none;
+	  display: inline-block;
+	  font-size: 20px;
+	  -webkit-transition-duration: 0.4s;
+	  /* Safari */
+	  transition-duration: 0.4s;
+	  cursor: pointer;
+	}
+  
+	.beginBtn {
+	  background-color: #4CAF50;
+	  color: rgb(245, 240, 240);
+	  z-index: 999;
+	  top: 270px;
+	  right: 70px;
+	  position: absolute;
+	  background-image: url(./images/play.png);
+	}
+  
+	.beginBtn:hover {
+	  background-color: #128316;
+	  color: white;
+	}
+  
+	.counter {
+	  background-color: #4CAF50;
+	  width: 150px;
+	  color: rgb(250, 245, 245);
+	  top: 300px;
+	  right: 50px;
+	  position: absolute;
+	}
+  
+	.lastBtn {
+	  background-color: #f0f5f7;
+	  color: rgb(31, 30, 30);
+	  top: 350px;
+	  right: 50px;
+	  position: absolute;
+	  background-image: url(./images/last.png);
+	}
+  
+	.lastBtn:hover {
+	  background-color: #ccd0d1;
+	  color: rgb(15, 15, 15);
+	}
+  
+	.nextBtn {
+	  background-color: #f0f5f7;
+	  color: rgb(31, 30, 30);
+	  top: 400px;
+	  right: 50px;
+	  position: absolute;
+	  background-image: url(./images/next.png);
+  
+	}
+  
+	.nextBtn:hover {
+	  background-color: #ccd0d1;
+	  color: rgb(15, 15, 15);
+	}
+  
+	.pauseBtn {
+	  background-color: #08b7f1;
+	  color: rgb(250, 245, 245);
+	  top: 450px;
+	  right: 50px;
+	  position: absolute;
+	  background-image: url(./images/pause.png);
+	}
+  
+	.pauseBtn:hover {
+	  background-color: #008CBA;
+	  color: white;
+	}
+  
+	.stopBtn {
+	  background-color: #f44336;
+	  color: rgb(250, 245, 245);
+	  top: 500px;
+	  right: 50px;
+	  position: absolute;
+	  background-image: url(./images/stop.png);
+	}
+  
+	.stopBtn:hover {
+	  background-color: #ad2920;
+	  color: white;
+	}
+  
+	.fullBtn {
+	  background-color: #4CAF50;
+	  color: rgb(245, 240, 240);
+	  z-index: 999;
+	  width: 40px;
+	  height: 40px;
+	  bottom: 30px;
+	  right: 10px;
+	  position: absolute;
+	  background-image: url(./images/fullbtn.png);
+	  background-size: 40px;
+	}
+  
+	.fullBtn:hover {
+	  background-color: #128316;
+	  color: white;
+	}
+  
+	
+	/* 底部 */
+	.footer {
+	  margin: 0;
+	  padding: 0;
+	  /* padding: 1px; */
+	  text-align: center;
+	  background: #0890b9;
+	  font-size: 15px;
+	  font-family: "微软雅黑";
+	  color: aliceblue;
+	}
+  </style>
+<body onload="load()">
+	
+
+	<div id="playerUI" >
+		<div id="header" class="header">
+			<h1>山东新智安环境安全技术服务有限公司承建化工园区三维可视化</h1>
+			<div class="manager">
+			  <h1 class="home">首页</h1>
+			  <h1 class="position">企业三维布局</h1>
+			  <h1 class="sysmanager">系统管理</h1>
+			</div>
+		  </div>
+		  <div id="menu" class="menu">
+		
+			<div id="side" class="side">
+			  <h1>企业三维布局</h1>
+			  <!-- <h3 id="fullData" onclick="downData()" onmouseover="this.style.textDecoration='underline'"
+				onmouseout="this.style.textDecoration='none'">
+				下载完整数据安装到本地加载
+			  </h3> -->
+			  <!-- <button onclick="toSix()">test</button> -->
+			  <button onclick="view_test()">跳转视点</button>
+			  <button onclick="lastView()">上一个视点</button>
+			  <button onclick="nextView()">下一个视点</button>
+			  <input  id="lon" type="text"  value="115.573799" placeholder="请输入经度:115.573799"/>
+			  <input  id="lat" type="text" value="35.001972" placeholder="请输入纬度:35.001972"/>
+			  <input  id="height" type="text" value="2000" placeholder="请输入高度:200.0"/>
+			  <input  id="roll" type="text" value="0" placeholder="请输入roll:0"/>
+			  <input  id="pitch" type="text"  value="-90" placeholder="请输入pitch:-90"/>
+			  <input  id="yaw" type="text" value="-600" placeholder="请输入yaw:-270"/>
+			  <input  id="time" type="text" value="2" placeholder="请输入跳转时间:2"/>
+			  <button type="button" onclick="add_Array()">打印数组</button>
+			  <button type="button" onclick="add_Board()">添加布告板</button>
+			  <button type="button" onclick="colortest()">改变布告板颜色</button>
+			  <button onclick="setWebUI()">添加网页</button>
+			  <button onclick="csize()">改变网页大小</button>
+			  <button type="button" onclick="addPicture()">添加图片轮播</button>
+			<button type="button" onclick="addicon()">添加图标</button>
+			<button type="button" onclick="destroytest()">销毁</button>
+			<button type="button" onclick="loadl()">线段绘制</button>
+			<button type="button" onclick="destroyLine()">取消线段绘制</button>
+			<button type="button" onclick="loadcl()">面的绘制</button>
+			<button type="button" onclick="destroyCloseLine()">取消面的绘制</button>
+			<button type="button" onclick="RTStest()">开启框选</button>
+			<button type="button" onclick="RTStest2()">关闭框选</button>
+			<button type="button" onclick="gettest()">获取布告板</button>
+			<button type="button" onclick="looktest()">look</button>
+			<button type="button" onclick="clicktest1()">开启点击返回经纬度</button>
+              <button type="button" onclick="clicktest2()">关闭点击返回经纬度</button>
+			  <button type="button" onclick="viewTest1()">返回当前相机的信息</button>
+			  <button type="button" onclick="extendtest1()">地面扩展</button>
+			  <button type="button" onclick="extendtest2()">关闭地面拓展</button>
+	
+			  
+			  <h3 >
+				更新时间 2021-10-21<br>
+				
+			  </h3>
+			</div>
+			<div id="player" ></div>
+			
+			<div id="main" class="main">
+		
+			  <div id="earth-box" class="earth-box" style="width: 100%; height: 100%;padding-bottom: -2px; ">
+				
+			  </div>
+		
+			</div>
+			
+		  </div>
+		  <div id="footer" class="footer">版权 bupt@cgt3d.cn</div>
+		  <!-- <div id="fullBtn" class="fullBtn" onclick="fullScreen()"></div> -->
+	
+	
+		
+		
+
+
+
+
+
+		<div id="overlay" class="overlay" style="display:none;">
+			<div>
+				<div id="qualityStatus" class="greyStatus">&#9679</div>
+				<div id="overlayButton">+</div>
+			</div>
+			<div id="overlaySettings">
+				<div id="KickOthers">
+					<div class="settings-text">Kick all other players</div>
+					<label class="btn-overlay">
+						<input type="button" id="kick-other-players-button" class="overlay-button btn-flat" value="Kick">
+					</label>
+				</div>
+                <div id="FillWindow">
+                    <div class="settings-text">Enlarge Display to Fill Window</div>
+                    <label class="tgl-switch">
+                        <input type="checkbox" id="enlarge-display-to-fill-window-tgl" class="tgl tgl-flat" checked>
+                        <div class="tgl-slider"></div>
+                    </label>
+                </div>
+                <div id="QualityControlOwnership">
+                    <div class="settings-text">Quality control ownership</div>
+                    <label class="tgl-switch">
+                        <input type="checkbox" id="quality-control-ownership-tgl" class="tgl tgl-flat">
+                        <div class="tgl-slider"></div>
+                    </label>
+                </div>
+				<div id="statsSetting"> 
+					<div class="settings-text">Show Stats</div>
+					<label class="tgl-switch">
+						<input type="checkbox" id="show-stats-tgl" class="tgl tgl-flat" checked>
+						<div class="tgl-slider"></div>
+					</label>
+					<div id="statsContainer">
+						<div id="stats"></div>
+					</div>
+				</div>
+				
+			</div>
+			
+		</div>
+	</div>
+</body>
+<script>
+	
+	inputOptions.controlScheme = ControlSchemeType.HoveringMouse;
+		inputOptions.fakeMouseWithTouches = false; 
+		inputOptions.suppressBrowserKeys = false;
+		addResponseEventListener("handle_responses", HandleResponse);
+		styleAdditional = 'flex: 78%;padding: 0;margin: 0;flex-grow: 1;height:91.8vh';
+
+		let location_arr=[];
+		function HandleResponse(data) {
+		
+		const location_arr1=[...location_arr,data];
+		location_arr=location_arr1;
+		console.log(location_arr);
+		
+	};
+
+	
+	var view_location=[
+		["115.568","34.997","1800","0","-90","-600","2"],
+ 	["115.550","34.993","800","110","-90","-40","2"],
+	["115.555","34.998","500","0","-140","-120","2"],
+	["115.557","35.001","450","45","-95","-40","2"],
+ 	["115.560","34.999","450","0","-90","-50","2"],
+ 	["115.562","34.999","450","5","-300","-200","2"],
+ 	["115.566","34.999","450","-3","-180","-100","2"],
+	["115.568","34.997","450","0","0","0","2"],
+	["115.583","34.997","450","-800","80","-300","2"],
+ 	["115.558","34.993","450","0","-90","-50","2"],
+			]
+  var c = -1;
+  function lastView() {
+	  if(c<0){
+		  c=c+12;
+	  }
+      c--;
+      var i = c % 11;
+      setView(
+        view_location[i][0],
+        view_location[i][1],
+        view_location[i][2],
+        view_location[i][3],
+        view_location[i][4],
+        view_location[i][5],
+		view_location[i][6],
+        view_location[i][7],
+		view_location[i][8],
+		view_location[i][9],
+		view_location[i][10]
+      );
+    }
+
+  function nextView() {
+   
+   c++;
+   console.log(c)
+  var i =c % 11;
+  setView(
+        view_location[i][0],
+        view_location[i][1],
+        view_location[i][2],
+        view_location[i][3],
+        view_location[i][4],
+        view_location[i][5],
+		view_location[i][6],
+        view_location[i][7],
+		view_location[i][8],
+		view_location[i][9],
+		view_location[i][10]
+      );
+   }
+var loctest=[[115.537471, 34.952381,200], [115.541934, 34.952443,200], [115.542002, 34.949021,200], [115.537439, 34.948996,200]];
+var sloctest=loctest.toString();
+
+function add_Array(){
+	drawBox(sloctest,"500","violet");
+}
+
+function RTStest(){
+	OpenRTSPawn("open");
+}
+function RTStest2()
+{
+	CloseRTSPawn("destroy");
+}
+
+function setWebUI(){
+    addWebUI("115.575","34.997","350","w1","https://www.bupt.edu.cn/","1","www.baidu.com");
+}
+function csize(){
+	setSize("13","w1")
+	
+}
+function destroytest(){
+	clear("0");
+}
+function loadl(){
+	lineLoad("0");
+}
+function loadcl(){
+	closeLineLoad("0");
+	
+}
+function destroyLine(){
+	destroyL("destroy");
+	location_arr=[];
+
+}
+function destroyCloseLine(){
+    destroyCL("destroy");
+}
+
+function gettest(){
+	getBoard("b2")
+	getBoard("b3")
+	getBoard("b4")
+	getBoard("b1")
+	getWeb("w1")
+	getIcon("ic1")
+	getPic("p1")
+}
+function looktest(){
+	lookAt("115.575", "34.995", "400","115.575", "34.997","350.000");
+}
+
+function clicktest1(){
+	getLocation("open");
+}
+function clicktest2()
+{
+	closeLocation("close");
+}
+function viewTest1()
+{
+	getCamera("open");
+}
+function extendtest1()
+{
+    startExtend("open");
+}
+function extendtest2()
+{
+	closeExtend("close");
+}
+
+
+function add_Board()
+	{
+		addBoardUI("115.555","35.000","400","http://wiki.cgt3d.cn/mediawiki/index.php/%E5%AE%9A%E9%99%B6%E5%8C%96%E5%B7%A5%E5%9B%AD%E5%8C%BA%E9%A1%B9%E7%9B%AE","b1");
+		addBoardUI("115.557","35.003","350","http://wiki.cgt3d.cn/mediawiki/index.php/%E5%AE%9A%E9%99%B6%E5%8C%96%E5%B7%A5%E5%9B%AD%E5%8C%BA%E9%A1%B9%E7%9B%AE","b2");
+	    addBoardUI("115.5613","35.0023","400","http://wiki.cgt3d.cn/mediawiki/index.php/%E5%AE%9A%E9%99%B6%E5%8C%96%E5%B7%A5%E5%9B%AD%E5%8C%BA%E9%A1%B9%E7%9B%AE","b3");
+		addBoardUI("115.566","35.002","400","http://wiki.cgt3d.cn/mediawiki/index.php/%E5%AE%9A%E9%99%B6%E5%8C%96%E5%B7%A5%E5%9B%AD%E5%8C%BA%E9%A1%B9%E7%9B%AE","b4");
+		addBoardUI("115.572","34.997","400","http://wiki.cgt3d.cn/mediawiki/index.php/%E5%AE%9A%E9%99%B6%E5%8C%96%E5%B7%A5%E5%9B%AD%E5%8C%BA%E9%A1%B9%E7%9B%AE","b5");
+		addBoardUI("115.578","34.996","400","http://wiki.cgt3d.cn/mediawiki/index.php/%E5%AE%9A%E9%99%B6%E5%8C%96%E5%B7%A5%E5%9B%AD%E5%8C%BA%E9%A1%B9%E7%9B%AE","b6");
+		addBoardUI("115.580","34.999","400","http://wiki.cgt3d.cn/mediawiki/index.php/%E5%AE%9A%E9%99%B6%E5%8C%96%E5%B7%A5%E5%9B%AD%E5%8C%BA%E9%A1%B9%E7%9B%AE","b7");
+		addBoardUI("115.558","34.995","400","http://wiki.cgt3d.cn/mediawiki/index.php/%E5%AE%9A%E9%99%B6%E5%8C%96%E5%B7%A5%E5%9B%AD%E5%8C%BA%E9%A1%B9%E7%9B%AE","b8");
+        addBoardUI("115.560","35.000","400","http://wiki.cgt3d.cn/mediawiki/index.php/%E5%AE%9A%E9%99%B6%E5%8C%96%E5%B7%A5%E5%9B%AD%E5%8C%BA%E9%A1%B9%E7%9B%AE","b9");
+
+
+		setContent("山东奥胜生物科技有限公司","b1");
+		setContent("山东格兰德生物科技有限公司","b2");
+		setContent("化工园区危险品停车场","b3");
+		setContent("山东和源化学有限公司","b4");
+		setContent("斯递尔科技","b5");
+		setContent("山东圣奥化学科技有限公司","b6");
+		setContent("祥云股份","b7");
+		setContent("山东新智源化工有限公司","b8");
+		setContent("山东福林新材料科技有限公司","b9");
+
+
+		setBoardColor("1","0","1","0","1");
+		
+	}
+function addPicture()
+{
+	pictureChange("115.574","34.997","350","https://file05.16sucai.com/2015/0613/35d8ddfb1a935add26c779b639fcc9a3.jpg,https://www.2008php.com/09_Website_appreciate/2010-07-11/20100711232024.jpg,http://tupian.qqjay.com/u/2017/0920/3_152937_1.jpg","1","3","p1");
+	pictureChange("115.572","34.997","350","https://file05.16sucai.com/2015/0613/35d8ddfb1a935add26c779b639fcc9a3.jpg,https://www.2008php.com/09_Website_appreciate/2010-07-11/20100711232024.jpg,http://tupian.qqjay.com/u/2017/0920/3_152937_1.jpg","0","3","p2");
+	
+}
+
+function addicon(){
+	let iconurl="https://img.sj33.cn/uploads/202010/7-2010220S359300.jpg"
+	setIcon("115.574","34.997","350","0.5","山东成武中远化工有限公司","10",iconurl,"ic1",
+	"http://wiki.cgt3d.cn/mediawiki/index.php/%E5%AE%9A%E9%99%B6%E5%8C%96%E5%B7%A5%E5%9B%AD%E5%8C%BA%E9%A1%B9%E7%9B%AE","1","0","5","cyan")
+	// let lat=document.getElementById("lat").value;
+	// 	let lon=document.getElementById("lon").value;
+	// 	let height=document.getElementById("height").value;
+	// 	let iconurl="https://img.sj33.cn/uploads/202010/7-2010220S359300.jpg"
+	// setIcon(lon,lat,height,"0.5","山东成武中远化工有限公司","10",iconurl,"ic1","http://wiki.cgt3d.cn/mediawiki/index.php/%E5%AE%9A%E9%99%B6%E5%8C%96%E5%B7%A5%E5%9B%AD%E5%8C%BA%E9%A1%B9%E7%9B%AE")
+}
+
+
+function colortest(){
+		var color_R=0;
+		var color_G=0;
+		var	color_B=1;
+		var color_A=0.5;
+		var	count=1;
+		setBoardColor(color_R,color_G,color_B,color_A,"b2")
+		selectBoardColor("yellow","b1")
+		selectBoardColor("green","b2")
+		// setUIMask(1,count);
+	}
+function view_test(){
+		let lat=document.getElementById("lat").value;
+		let lon=document.getElementById("lon").value;
+		let height=document.getElementById("height").value;
+		let roll=document.getElementById("roll").value;
+		let pitch=document.getElementById("pitch").value;
+		let yaw=document.getElementById("yaw").value;
+		let time=document.getElementById("time").value;
+		var i=0;
+		console.log(lat);
+		setView(lon,lat,height,roll,pitch,yaw,time)
+
+}
+function addBoardUI(lon,lat,height,dataID,ID){
+		let JsonData = {
+			Ulon:lon,
+			Ulat:lat,
+			Uheight:height,
+			UdataID:dataID,
+			UID:ID,
+	};
+	console.log(JsonData);
+	emitUIInteraction(JsonData);
+}
+function setBoardColor(color_R,color_G,color_B,color_A,ID){
+
+	let JsonData = {
+			colorR:color_R,
+			colorG:color_G,
+			colorB:color_B,
+			colorA:color_A,
+			colorCount:ID,
+	};
+	console.log(JsonData);
+	emitUIInteraction(JsonData);
+}
+function selectBoardColor(color,ID){
+
+let JsonData = {
+	basicMaterial:color,
+	basicCount:ID,
+};
+console.log(JsonData);
+emitUIInteraction(JsonData);
+}
+function setView(lon,lat,height,roll,pitch,yaw,time){
+		let JsonData = {
+			view_lon:lon,
+			view_lat:lat,
+			view_height:height,
+			view_roll:roll,
+			view_pitch:pitch,
+			view_yaw:yaw,
+			view_time:time,
+	};
+	console.log(JsonData);
+	emitUIInteraction(JsonData);
+}
+function setUIMask(UI_display,ID){
+		let JsonData = {
+			UIdisplay:UI_display,
+			displayCount:ID,
+	};
+	console.log(JsonData);
+	emitUIInteraction(JsonData);
+}
+function setContent(UI_content,ID){
+		let JsonData = {
+			UIcontent:UI_content,
+			UICount:ID,
+	};
+	console.log(JsonData);
+	emitUIInteraction(JsonData);
+}
+
+function addWebUI(webLon,webLat,webHeight,ID,url,Uweb_Shadow,Uextra_URL){
+	    let JsonData = {
+			UwebLon:webLon,
+			UwebLat:webLat,
+			UwebHeight:webHeight,
+			Utag:ID,
+			UwebUrl:url,
+			UwebShadow:Uweb_Shadow,
+			UextraURL:Uextra_URL
+	};
+	console.log(JsonData);
+	emitUIInteraction(JsonData);
+}
+function setSize(webUI_size,ID){
+	    let JsonData = {
+			webUIsize:webUI_size,
+            sizeContent:ID,
+	};
+	console.log(JsonData);
+	emitUIInteraction(JsonData);
+}
+function setIcon(icon_Lon,icon_Lat,icon_Height,icon_Opacity,icon_Text,icon_Scale,icon_URL,ID,dataID,lv,icon_Shadow,icon_textScale,icon_color){
+     let JsonData = {
+   iconLon:icon_Lon,
+   iconLat:icon_Lat,
+   iconHeight:icon_Height,
+   iconOpacity:icon_Opacity,
+   iconText:icon_Text,
+   iconScale:icon_Scale,
+   iconURL:icon_URL,
+   iconID:ID,
+   icondataID:dataID,
+   iconlv:lv,
+   iconShadow:icon_Shadow,
+   icontextScale:icon_textScale,
+   iconcolor:icon_color,
+   
+ };
+ console.log(JsonData);
+ emitUIInteraction(JsonData);
+}
+
+function OpenRTSPawn(returnNum){     //开启RTS摄像机进行框选
+	    let JsonData = {
+			OpenRTS:returnNum,
+	};
+	console.log(JsonData);
+	emitUIInteraction(JsonData);
+}
+function CloseRTSPawn(returnNum){     //关闭RTS摄像机框选
+	    let JsonData = {
+			RTSdestroy:returnNum,
+	};
+	console.log(JsonData);
+	emitUIInteraction(JsonData);
+}
+
+
+function lineLoad(line){     //输入0开始绘制，其他命令无效
+	    let JsonData = {
+		   Uline:line,
+	};
+	console.log(JsonData);
+	emitUIInteraction(JsonData);
+}
+function closeLineLoad(closeLine){    //输入0开始绘制，其他命令无效
+	    let JsonData = {
+			UcloseLine:closeLine,
+	};
+	console.log(JsonData);
+	emitUIInteraction(JsonData);
+}
+function destroyL(desLine){
+	    let JsonData = {
+			UdesLine:desLine,
+	};
+	console.log(JsonData);
+	emitUIInteraction(JsonData);
+}
+function destroyCL(desCloseLine){
+	    let JsonData = {
+			UdesCloseLine:desCloseLine,
+	};
+	console.log(JsonData);
+	emitUIInteraction(JsonData);
+}
+function pictureChange(lon,lat,height,URL,lv,delay,ID,P_Shadow){
+		let JsonData = {
+			Plon:lon,
+			Plat:lat,
+			Pheight:height,
+			PURL:URL,
+			LorV:lv,
+			Pdelay:delay,
+			PID:ID,
+			PShadow:P_Shadow
+	};
+	console.log(JsonData);
+	emitUIInteraction(JsonData);
+}
+function destroy(ID){
+	    let JsonData = {
+			UeID:ID,
+	};
+	console.log(JsonData);
+	emitUIInteraction(JsonData);
+}
+
+
+
+function getBoard(ID){
+	    let JsonData = {
+			getBoardID:ID,
+	};
+	console.log(JsonData);
+	emitUIInteraction(JsonData);
+}
+function getWeb(ID){
+	    let JsonData = {
+			getWebID:ID,
+	};
+	console.log(JsonData);
+	emitUIInteraction(JsonData);
+}
+function getIcon(ID){
+	    let JsonData = {
+			geticonID:ID,
+	};
+	console.log(JsonData);
+	emitUIInteraction(JsonData);
+}
+function getPic(ID){
+	    let JsonData = {
+			getpicID:ID,
+	};
+	console.log(JsonData);
+	emitUIInteraction(JsonData);
+}
+function clear(num){
+	    let JsonData = {
+			clearNum:num,
+	};
+	console.log(JsonData);
+	emitUIInteraction(JsonData);
+}
+function lookAt(camera_lon,camera_lat,camera_height,t_lon,t_lat,t_height){
+	let JsonData = {
+		cameraLon:camera_lon,
+		cameraLat:camera_lat,
+		cameraHeight:camera_height,
+		tarLon:t_lon,
+		tarLat:t_lat,
+		tarHeight:t_height,
+	};
+	console.log(JsonData);
+	emitUIInteraction(JsonData);
+
+}
+
+
+function getLocation(location){//返回点击地图的坐标以及高度
+	    let JsonData = {
+			openGetLocation:location
+	};
+	console.log(JsonData);
+	emitUIInteraction(JsonData);
+
+}
+
+function closeLocation(location){//取消点击地图返回坐标和高度
+	    let JsonData = {
+			closeGetLocation:location
+	};
+	console.log(JsonData);
+	emitUIInteraction(JsonData);
+}
+
+function getCamera(view){//返回相机信息
+	let JsonData = {
+			getView:view
+	};
+	console.log(JsonData);
+	emitUIInteraction(JsonData);
+
+}
+function startExtend(ground){//扩展地面
+	let JsonData = {
+			extendOpen:ground
+	};
+	console.log(JsonData);
+	emitUIInteraction(JsonData);
+
+}
+function closeExtend(ground){//取消扩展地面
+	let JsonData = {
+			extendClose:ground
+	};
+	console.log(JsonData);
+	emitUIInteraction(JsonData);
+
+}
+function drawBox(box_Array,box_Height,box_color){//
+	let JsonData = {
+			boxArray:box_Array,
+			boxHeight:box_Height,
+			boxcolor:box_color,
+	};
+	console.log(JsonData);
+	emitUIInteraction(JsonData);
+
+}
+</script>
+<script>
+/*取消滚轮事件冒泡*/
+
+  //用firefox变量表示火狐代理
+  var firefox = navigator.userAgent.indexOf("Firefox") != -1;
+  function MouseWheel(e) {
+    //阻止事件冒泡和默认行为的完整兼容性代码
+    e = e || window.event;
+    if (e.stopPropagation) {
+      //这是取消冒泡
+      e.stopPropagation();
+    } else {
+      e.cancelBubble = true;
+    }
+    if (e.preventDefault) {
+      //这是取消默认行为，要弄清楚取消默认行为和冒泡不是一回事
+      e.preventDefault();
+    } else {
+      e.returnValue = false;
+    }
+  }
+  var con = document.getElementById("earth");
+  //要在content内部滚动，而页面不受影响，所以这里获取要滚动的对象
+  //如果是ff就绑定DOMMouseScroll事件，其他浏览器就用onmousewheel事件触发
+  firefox
+    ? con.addEventListener("DOMMouseScroll", MouseWheel, false)
+    : (con.onmousewheel = MouseWheel);
+
+	var isFull = false;
+function fullScreen() {
+
+if (isFull == false) {
+  document.getElementById("footer").style.display = "none";
+  document.getElementById("header").style.display = "none";
+  document.getElementById("side").style.display = "none";
+  isFull = true;
+}
+else {
+  document.getElementById("footer").style.display = "block";
+  document.getElementById("header").style.display = "block";
+  document.getElementById("side").style.display = "block";
+  isFull = false;
+}
+}
+</script>
+</html>
