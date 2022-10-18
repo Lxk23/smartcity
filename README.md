@@ -13,3 +13,6 @@ https://user-images.githubusercontent.com/90737354/196335309-ae8871d7-c839-4909-
 
 ### 在指定经纬度高度动态生成布告板，隐藏布告板
 https://user-images.githubusercontent.com/90737354/196352636-dd88a26c-f737-4d49-a1f3-47d27ed1cabc.mp4
+
+### 视点漫游、随视点改变生成和销毁布告板
+https://user-images.githubusercontent.com/90737354/196363808-21d8e205-d20f-41e5-8780-2ef665acda1b.mp4
