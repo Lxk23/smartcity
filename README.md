@@ -10,3 +10,6 @@
 
 ### 动态修改布告板字体、文字内容和颜色
 https://user-images.githubusercontent.com/90737354/196335309-ae8871d7-c839-4909-9f03-9123905814cd.mp4
+
+### 在指定经纬度高度动态生成布告板，隐藏布告板
+https://user-images.githubusercontent.com/90737354/196352636-dd88a26c-f737-4d49-a1f3-47d27ed1cabc.mp4
